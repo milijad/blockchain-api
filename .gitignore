@@ -1,0 +1,30 @@
+# .NET build
+**/bin/
+**/obj/
+
+# Rider / VS / VSCode
+.idea/
+.vs/
+.vscode/
+
+# User files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# EF Core
+**/Migrations/*.cs
+!**/Migrations/AppDbContextModelSnapshot.cs
+
+# Docker volumes
+pgdata/
+
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+
+# OS
+.DS_Store
+Thumbs.db

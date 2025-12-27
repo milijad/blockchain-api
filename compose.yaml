@@ -1,0 +1,27 @@
+﻿services:
+  blockchain.api:
+    image: blockchain.api
+    build:
+      context: .
+      dockerfile: src/Blockchain.Api/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=blockchain;Username=icmarkets;Password=icmarkets
+
+  postgres:
+    image: postgres:16
+    container_name: icmarkets-postgres
+    environment:
+      POSTGRES_DB: blockchain
+      POSTGRES_USER: icmarkets
+      POSTGRES_PASSWORD: icmarkets
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

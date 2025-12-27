@@ -1,0 +1,36 @@
+using Blockchain.Application.Common.Errors;
+using FluentResults;
+
+namespace Blockchain.Api.Common;
+
+public static class ResultExtensions
+{
+    public static IResult ToHttpResult<T>(this Result<T> result)
+    {
+        if (result.IsSuccess)
+            return Results.Ok(result.Value);
+
+        return MapErrors(result.Errors);
+    }
+
+    public static IResult ToHttpResult(this Result result)
+    {
+        if (result.IsSuccess)
+            return Results.Ok();
+
+        return MapErrors(result.Errors);
+    }
+
+    private static IResult MapErrors(IReadOnlyList<IError> errors)  
+    {
+        var error = errors is { Count: >0 } ? errors[0] : new Error("Internal server error");
+
+        return error switch
+        {
+            ExternalServiceUnavailableError e => Results.Problem(e.Message, statusCode: 503),
+            ValidationFailedError e          => Results.BadRequest(e.Message),
+            NotFoundError e                  => Results.NotFound(e.Message),
+            _                                => Results.Problem("Internal server error")
+        };
+    }
+}
