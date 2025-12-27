@@ -9,7 +9,7 @@
     depends_on:
       - postgres
     environment:
-      - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=blockchain;Username=icmarkets;Password=icmarkets
+      - ConnectionStrings__Postgres=${POSTGRES_CONNECTION}
 
   postgres:
     image: postgres:16

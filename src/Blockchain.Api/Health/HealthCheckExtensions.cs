@@ -1,7 +1,3 @@
-using Blockchain.Api.Health;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Blockchain.Api.Health;
 
 public static class HealthCheckExtensions

@@ -1,6 +1,7 @@
 using Blockchain.Api.Endpoints;
 using Blockchain.Api.Health;
 using Blockchain.Api.Middleware;
+using Blockchain.Application;
 using Blockchain.Application.Common;
 using Blockchain.Infrastructure;
 using Blockchain.Infrastructure.Configuration;
@@ -14,7 +15,7 @@ builder.Services.Configure<BlockCypherOptions>(
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+    cfg.RegisterServicesFromAssemblyContaining<AssemblyReference>());
 builder.Services.AddApplicationHealthChecks(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
