@@ -18,7 +18,7 @@ internal sealed class BlockCypherClient : IBlockCypherClient
         HttpClient httpClient,
         ILogger<BlockCypherClient> logger,
         IOptions<BlockCypherOptions> options)
-    {
+    {   
         _httpClient = httpClient;
         _logger = logger;
         _httpClient.BaseAddress = new Uri(options.Value.BaseUrl);
