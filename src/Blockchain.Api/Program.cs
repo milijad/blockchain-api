@@ -1,14 +1,21 @@
 using Blockchain.Api.Endpoints;
+using Blockchain.Api.Health;
 using Blockchain.Api.Middleware;
+using Blockchain.Application.Common;
 using Blockchain.Infrastructure;
+using Blockchain.Infrastructure.Configuration;
 using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<BlockCypherOptions>(
+    builder.Configuration.GetSection(BlockCypherConstants.ConfigurationSection));
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddApplicationHealthChecks(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -32,5 +39,6 @@ app.UseSwaggerUI(options =>
 
 app.UseHttpsRedirection();
 app.MapBlockchainEndpoints();
+app.MapApplicationHealthChecks();
 
 app.Run();
