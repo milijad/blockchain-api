@@ -21,16 +21,18 @@ public static class ResultExtensions
         return MapErrors(result.Errors);
     }
 
-    private static IResult MapErrors(IReadOnlyList<IError> errors)  
+    private static IResult MapErrors(IReadOnlyList<IError> errors)
     {
-        var error = errors is { Count: >0 } ? errors[0] : new Error("Internal server error");
+        var error = errors.FirstOrDefault() ?? new Error("Internal server error");
 
         return error switch
         {
             ExternalServiceUnavailableError e => Results.Problem(e.Message, statusCode: 503),
-            ValidationFailedError e          => Results.BadRequest(e.Message),
-            NotFoundError e                  => Results.NotFound(e.Message),
-            _                                => Results.Problem("Internal server error")
+            ValidationFailedError e => Results.BadRequest(e.Message),
+            NotFoundError e => Results.NotFound(e.Message),
+            SnapshotStoreFailedError e => Results.Problem(e.Message, statusCode: 500),
+            SnapshotHistoryReadFailedError e => Results.Problem(e.Message, statusCode: 500),
+            _ => Results.Problem("Internal server error", statusCode: 500)
         };
     }
 }

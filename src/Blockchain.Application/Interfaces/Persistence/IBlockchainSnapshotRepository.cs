@@ -10,4 +10,4 @@ public interface IBlockchainSnapshotRepository
         BlockchainType type,
         int limit,
         CancellationToken cancellationToken);
-}
+}   
