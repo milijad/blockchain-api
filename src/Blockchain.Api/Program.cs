@@ -1,3 +1,4 @@
+using Blockchain.Api.Common.Configuration;
 using Blockchain.Api.Endpoints;
 using Blockchain.Api.Health;
 using Blockchain.Api.Middleware;
@@ -11,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<BlockCypherOptions>(
     builder.Configuration.GetSection(BlockCypherConstants.ConfigurationSection));
+var corsOptions = builder.Configuration
+    .GetSection(CorsOptions.SectionName)
+    .Get<CorsOptions>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
@@ -29,9 +33,18 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("InternalOnly", p =>
+        p.WithOrigins(corsOptions!.AllowedOrigins)
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseCors("InternalOnly");
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

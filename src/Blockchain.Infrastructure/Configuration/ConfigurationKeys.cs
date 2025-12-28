@@ -1,4 +1,4 @@
-namespace Blockchain.Application.Common;
+namespace Blockchain.Infrastructure.Configuration;
 
 public static class ConfigurationKeys
 {

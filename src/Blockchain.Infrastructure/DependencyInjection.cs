@@ -21,7 +21,7 @@ public static class DependencyInjection
         services.AddHttpClient<IBlockCypherClient, BlockCypherClient>();
         
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Postgres")));
+            options.UseNpgsql(configuration.GetConnectionString(ConfigurationKeys.PostgresConnection)));
         
         services.AddScoped<IBlockchainSnapshotRepository, BlockchainSnapshotRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();

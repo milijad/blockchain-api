@@ -7,3 +7,7 @@ public sealed class ExternalServiceUnavailableError(string message) : Error(mess
 public sealed class ValidationFailedError(string message) : Error(message);
 
 public sealed class NotFoundError(string message) : Error(message);
+
+public sealed class SnapshotStoreFailedError(string message) : Error(message);
+
+public sealed class SnapshotHistoryReadFailedError(string message) : Error(message);
