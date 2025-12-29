@@ -27,8 +27,9 @@ public class FetchEthMainSnapshotHandlerTests
         var handler = new FetchEthMainSnapshotHandler(
             client.Object,
             repo.Object,
-            NullLogger<FetchEthMainSnapshotHandler>.Instance, 
-            uow.Object);
+            uow.Object,
+            NullLogger<FetchEthMainSnapshotHandler>.Instance
+            );
 
         var result = await handler.Handle(new FetchEthMainSnapshotCommand(), CancellationToken.None);
 

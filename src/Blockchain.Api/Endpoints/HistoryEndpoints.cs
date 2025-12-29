@@ -1,6 +1,5 @@
 using Blockchain.Api.Common;
 using Blockchain.Api.Contracts;
-using Blockchain.Application.Features.BlockchainSnapshots.Commands;
 using Blockchain.Application.Features.BlockchainSnapshots.Queries;
 using Blockchain.Domain.Enums;
 using FluentValidation;
@@ -8,22 +7,10 @@ using MediatR;
 
 namespace Blockchain.Api.Endpoints;
 
-public static class BlockchainEndpoints
+public static class HistoryEndpoints
 {
-    public static void MapBlockchainEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapBlockchainHistoryEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/blockchain/eth/fetch", async (
-                IMediator mediator,
-                CancellationToken ct) =>
-                (await mediator.Send(new FetchEthMainSnapshotCommand(), ct)).ToHttpResult())
-            .WithName("FetchEthMainSnapshot")
-            .WithTags("Blockchain")
-            .WithSummary("Fetch ETH mainnet snapshot")
-            .WithDescription(
-                "Calls BlockCypher ETH mainnet endpoint, stores full JSON payload in database")
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status503ServiceUnavailable);
-        
         app.MapGet("/api/blockchain/{type}/history",
                 async (
                     [AsParameters] GetBlockchainHistoryRequest request,
@@ -52,5 +39,7 @@ public static class BlockchainEndpoints
                 "- `limit` – Number of latest records to return (1–1000)")
             .Produces<IReadOnlyList<string>>()
             .Produces(StatusCodes.Status400BadRequest);
+        
+        return app;
     }
 }

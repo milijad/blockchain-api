@@ -1,56 +1,21 @@
-using System.Text.Json;
-using Blockchain.Application.Common.Errors;
-using Blockchain.Application.Common.Logging;
-using FluentResults;
+using Blockchain.Application.DTOs.BlockCypher;
 using Blockchain.Application.Interfaces.Clients;
 using Blockchain.Application.Interfaces.Persistence;
-using Blockchain.Domain.Entities;
 using Blockchain.Domain.Enums;
-using MediatR;
+using FluentResults;
 using Microsoft.Extensions.Logging;
 
 namespace Blockchain.Application.Features.BlockchainSnapshots.Commands;
 
-internal sealed partial class FetchEthMainSnapshotHandler(
+internal sealed class FetchEthMainSnapshotHandler(
     IBlockCypherClient client,
-    IBlockchainSnapshotRepository repository,
-    ILogger<FetchEthMainSnapshotHandler> logger,    
-    IUnitOfWork uow)
-    : IRequestHandler<FetchEthMainSnapshotCommand, Result>
+    IBlockchainSnapshotRepository repo,
+    IUnitOfWork uow,
+    ILogger<FetchEthMainSnapshotHandler> logger)
+    : FetchBlockchainSnapshotHandler<FetchEthMainSnapshotCommand, EthMainResponseDto>(client, repo, uow, logger)
 {
-    public async Task<Result> Handle(
-        FetchEthMainSnapshotCommand request,
-        CancellationToken cancellationToken)
-    {
-        var apiResult = await client.GetEthMainAsync(cancellationToken);
-
-        if (apiResult.IsFailed)
-        {
-            LogBlockchainApiError(new (apiResult.Errors));
-            return Result.Fail(new ExternalServiceUnavailableError("BlockCypher unreachable"));
-        }
-
-        var snapshot = new BlockchainSnapshot
-        {
-            Blockchain = BlockchainType.EthMain,
-            CreatedAt = DateTime.UtcNow,
-            PayloadJson = JsonSerializer.Serialize(apiResult.Value)
-        };
-
-        try
-        {
-            await repository.AddAsync(snapshot, cancellationToken);
-            await uow.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Failed to save snapshot to database");
-            return Result.Fail(new SnapshotStoreFailedError("Error saving snapshot"));
-        }
-
-        return Result.Ok();
-    }
-    
-    [LoggerMessage(Level = LogLevel.Error, Message = "Blockchain API returned an error: {errors}")]
-    private partial void LogBlockchainApiError(ErrorLogValues errors);
+    protected override BlockchainType Blockchain => BlockchainType.EthMain;
+    protected override string ErrorMessage => "ETH API unreachable";
+    protected override Func<IBlockCypherClient, CancellationToken, Task<Result<EthMainResponseDto>>> ApiCall
+        => (c, ct) => c.GetEthMainAsync(ct);
 }
