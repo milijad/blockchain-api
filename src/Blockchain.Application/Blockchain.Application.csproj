@@ -15,4 +15,8 @@
       <ProjectReference Include="..\Blockchain.Domain\Blockchain.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Blockchain.UnitTests" />
+    </ItemGroup>
+
 </Project>
