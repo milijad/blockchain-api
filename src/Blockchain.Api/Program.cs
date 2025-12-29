@@ -1,5 +1,5 @@
 using Blockchain.Api.Common.Configuration;
-using Blockchain.Api.Endpoints;
+using Blockchain.Api.Extensions;
 using Blockchain.Api.Health;
 using Blockchain.Api.Middleware;
 using Blockchain.Application;
@@ -52,7 +52,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseHttpsRedirection();
-app.MapBlockchainEndpoints();
+app.MapAllEndpoints();
 app.MapApplicationHealthChecks();
 
 app.Run();
