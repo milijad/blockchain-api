@@ -21,9 +21,24 @@ public class BlockCypherClientIntegrationTests
 
         var client = new BlockCypherClient(http,NullLogger<BlockCypherClient>.Instance,  options);
 
-        var result = await client.GetEthMainAsync(CancellationToken.None);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Name.Should().Contain("ETH.main");
+        var ethResult = await client.GetEthMainAsync(CancellationToken.None);
+        ethResult.IsSuccess.Should().BeTrue();
+        ethResult.Value.Name.Should().Contain("ETH.main");
+        
+        var btcMainResult = await client.GetBtcMainAsync(CancellationToken.None);
+        btcMainResult.IsSuccess.Should().BeTrue();
+        btcMainResult.Value.Name.Should().Contain("BTC.main");
+        
+        var btcTest3Result = await client.GetBtcTest3Async(CancellationToken.None);
+        btcTest3Result.IsSuccess.Should().BeTrue();
+        btcTest3Result.Value.Name.Should().Contain("BTC.test3");
+        
+        var dashResult = await client.GetDashMainAsync(CancellationToken.None);
+        dashResult.IsSuccess.Should().BeTrue();
+        dashResult.Value.Name.Should().Contain("DASH.main");
+        
+        var ltcResult = await client.GetLtcMainAsync(CancellationToken.None);
+        ltcResult.IsSuccess.Should().BeTrue();
+        ltcResult.Value.Name.Should().Contain("LTC.main");
     }
 }

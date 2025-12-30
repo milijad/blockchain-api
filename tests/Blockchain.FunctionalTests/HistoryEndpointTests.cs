@@ -1,5 +1,4 @@
 ﻿using Blockchain.TestInfrastructure;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Blockchain.FunctionalTests;
 

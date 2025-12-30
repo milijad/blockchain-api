@@ -1,4 +1,4 @@
-﻿using Blockchain.Application.DTOs.BlockCypher;
+using Blockchain.Application.DTOs.BlockCypher;
 using Blockchain.Application.Features.BlockchainSnapshots.Commands;
 using Blockchain.Application.Interfaces.Clients;
 using Blockchain.Application.Interfaces.Persistence;
@@ -10,31 +10,31 @@ using Moq;
 
 namespace Blockchain.UnitTests;
 
-public class FetchEthMainSnapshotHandlerTests
+public class FetchBtcMainSnapshotHandlerTests
 {
     [Fact]
     public async Task Handle_WhenApiReturnsSuccess_ShouldPersistSnapshot()
     {
         var client = new Mock<IBlockCypherClient>();
-        client.Setup(x => x.GetEthMainAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Result.Ok(new EthMainResponseDto()));
+        client.Setup(x => x.GetBtcMainAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Ok(new BtcMainResponseDto()));
 
         var repo = new Mock<IBlockchainSnapshotRepository>();
         var uow = new Mock<IUnitOfWork>();
         uow.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
-        var handler = new FetchEthMainSnapshotHandler(
+        var handler = new FetchBtcMainSnapshotHandler(
             client.Object,
             repo.Object,
             uow.Object,
-            NullLogger<FetchEthMainSnapshotHandler>.Instance
-            );
+            NullLogger<FetchBtcMainSnapshotHandler>.Instance
+        );
 
-        var result = await handler.Handle(new FetchEthMainSnapshotCommand(), CancellationToken.None);
+        var result = await handler.Handle(new FetchBtcMainSnapshotCommand(), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        client.Verify(c => c.GetEthMainAsync(It.IsAny<CancellationToken>()), Times.Once);
+        client.Verify(c => c.GetBtcMainAsync(It.IsAny<CancellationToken>()), Times.Once);
         repo.Verify(r => r.AddAsync(It.IsAny<BlockchainSnapshot>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
