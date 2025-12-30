@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Blockchain.IntegrationTests;
 
+[Trait("Category", "External")]
 public class BlockCypherClientIntegrationTests
 {
     [Fact]

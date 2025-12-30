@@ -35,7 +35,7 @@ public static class HistoryEndpoints
             .WithDescription(
                 "Returns the latest stored blockchain snapshots.\n\n" +
                 "**Query parameters:**\n" +
-                "- `type` – Blockchain type (EthMain, BtcMain, BtcTest, DashMain, LtcMain)\n" +
+                "- `type` – Blockchain type (EthMain, BtcMain, BtcTest3, DashMain, LtcMain)\n" +
                 "- `limit` – Number of latest records to return (1–1000)")
             .Produces<IReadOnlyList<string>>()
             .Produces(StatusCodes.Status400BadRequest);

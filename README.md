@@ -59,6 +59,8 @@ Run:
 
 docker compose up -d --build
 
+Wait for migration to finish (check readiness probe for Healthy status). 
+
 Swagger: http://localhost:5000/swagger  
 Health:  
 http://localhost:5000/health/live – liveness probe (process up)  
