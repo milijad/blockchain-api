@@ -22,6 +22,22 @@
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+        
+  migrator:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    container_name: blockchain-migrator
+    depends_on:
+      - postgres
+    volumes:
+      - .:/src
+    working_dir: /src
+    environment:
+      - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=blockchain;Username=icmarkets;Password=icmarkets
+    command: >
+      sh -c "dotnet restore &&
+             dotnet tool install --global dotnet-ef &&
+             export PATH=$PATH:/root/.dotnet/tools &&
+             dotnet-ef database update --project src/Blockchain.Infrastructure --startup-project src/Blockchain.Api"
 
 volumes:
   pgdata:

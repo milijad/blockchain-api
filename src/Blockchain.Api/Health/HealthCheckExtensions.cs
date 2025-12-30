@@ -1,3 +1,5 @@
+using Blockchain.Infrastructure.Configuration;
+
 namespace Blockchain.Api.Health;
 
 public static class HealthCheckExtensions
@@ -9,7 +11,8 @@ public static class HealthCheckExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("Postgres") ?? string.Empty)
+            .AddNpgSql(configuration.GetConnectionString(ConfigurationKeys.PostgresConnection)!)
+            .AddCheck<DatabaseSchemaHealthCheck>("db-schema")
             .AddCheck<BlockCypherHealthCheck>("blockcypher");
 
         return services;
