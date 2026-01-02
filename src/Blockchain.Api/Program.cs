@@ -44,15 +44,14 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseHttpsRedirection();
 app.UseCors("InternalOnly");
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blockchain Snapshot API v1");
 });
-
-app.UseHttpsRedirection();
-app.MapAllEndpoints();
 app.MapApplicationHealthChecks();
+app.MapAllEndpoints();
 
 app.Run();
